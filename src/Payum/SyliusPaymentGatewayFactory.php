@@ -22,7 +22,9 @@ final class SyliusPaymentGatewayFactory extends GatewayFactory
             return new SyliusApi(
                 $config['cmi_client_id'],
                 $config['cmi_secret_key'],
-                $config['cmi_url']
+                $config['cmi_test_mode'],
+                $config['cmi_auto_redirect'],
+                $config['cmi_redirect_to'],
             );
         };
     }
