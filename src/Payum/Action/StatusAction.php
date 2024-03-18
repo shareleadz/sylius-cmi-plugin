@@ -11,17 +11,31 @@ use Sylius\Component\Core\Model\PaymentInterface as SyliusPaymentInterface;
 
 final class StatusAction implements ActionInterface
 {
+    public function __construct()
+    {
+    }
+
+    /**
+     * @param GetStatusInterface $request
+     * @return void
+     */
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
         /** @var SyliusPaymentInterface $payment */
         $payment = $request->getFirstModel();
+//        dump($request);
+//        dump($payment);
+//        die;
 
         $details = $payment->getDetails();
+
+
         if ($payment instanceof SyliusPaymentInterface) {
             if (200 === $details['status']) {
                 $request->markCaptured();
+//                dump('captured');
 
                 return;
             }
@@ -33,12 +47,12 @@ final class StatusAction implements ActionInterface
             }
 
             $request->markUnknown();
-        } else {
+        }
+        /*else {
             $tokenDetails = $payment->getDetails();
             $payment = $this->paymentRepo->findOneBy(['id' => $tokenDetails->getId()]);
             $request->setModel($payment);
-        }
-
+        }*/
     }
 
     public function supports($request): bool
