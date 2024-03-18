@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ShareLeadz\SyliusCmiPlugin\Payum\Action;
 
-use ShareLeadz\SyliusCmiPlugin\CmiProdClient;
+use ShareLeadz\SyliusCmiPlugin\Cmi\CmiProdClient;
 use ShareLeadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType;
 use ShareLeadz\SyliusCmiPlugin\Payum\SyliusApi;
 use CMI\CmiClient;
@@ -17,7 +17,6 @@ use Payum\Core\Reply\HttpResponse;
 use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
-use Sylius\Component\Core\Model\PaymentInterface as SyliusPaymentInterface;
 use Payum\Core\Request\Capture;
 use Sylius\Component\Payment\Model\PaymentInterface;
 use Sylius\Component\Payment\PaymentTransitions;
@@ -62,7 +61,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
-        /** @var SyliusPaymentInterface $payment */
+        /** @var PaymentInterface $payment */
         $payment = $request->getModel();
         $cmiClientClass = $this->api->getCmiTestMode() === SyliusGatewayConfigurationType::ENABLED ? CmiClient::class : CmiProdClient::class;
         // check if a post request coming from CMI
@@ -141,7 +140,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
     {
         return
             $request instanceof Capture &&
-            $request->getModel() instanceof SyliusPaymentInterface;
+            $request->getModel() instanceof PaymentInterface;
     }
 
     public function setApi($api): void

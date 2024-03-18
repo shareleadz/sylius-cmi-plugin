@@ -5,10 +5,10 @@
         <!-- Put your services here -->
         <service id="app.cmi_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>ShareLeadz\SyliusCmiPlugin\Payum\SyliusPaymentGatewayFactory</argument>
-            <tag name="payum.gateway_factory_builder" factory="sylius_payment" />
+            <tag name="payum.gateway_factory_builder" factory="cmi_payment" />
         </service>
         <service id="ShareLeadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType">
-            <tag name="sylius.gateway_configuration_type" type="sylius_payment" label="Sylius Payment" />
+            <tag name="sylius.gateway_configuration_type" type="cmi_payment" label="Cmi Payment" />
             <tag name="form.type" />
         </service>
         <service id="ShareLeadz\SyliusCmiPlugin\Payum\Action\CaptureAction" public="true">
