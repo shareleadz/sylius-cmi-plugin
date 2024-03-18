@@ -1,6 +1,6 @@
 <?php
 
-namespace Acme\SyliusExamplePlugin\CMI;
+namespace ShareLeadz\SyliusCmiPlugin;
 
 use CMI\CmiClient;
 

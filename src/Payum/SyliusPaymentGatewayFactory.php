@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Acme\SyliusExamplePlugin\Payum;
+namespace ShareLeadz\SyliusCmiPlugin\Payum;
 
-use Acme\SyliusExamplePlugin\Payum\Action\StatusAction;
+use ShareLeadz\SyliusCmiPlugin\Payum\Action\StatusAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
 

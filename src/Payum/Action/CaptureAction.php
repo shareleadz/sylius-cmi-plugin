@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Acme\SyliusExamplePlugin\Payum\Action;
+namespace ShareLeadz\SyliusCmiPlugin\Payum\Action;
 
-use Acme\SyliusExamplePlugin\CMI\CmiProdClient;
-use Acme\SyliusExamplePlugin\Form\Type\SyliusGatewayConfigurationType;
-use Acme\SyliusExamplePlugin\Payum\SyliusApi;
+use ShareLeadz\SyliusCmiPlugin\CmiProdClient;
+use ShareLeadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType;
+use ShareLeadz\SyliusCmiPlugin\Payum\SyliusApi;
 use CMI\CmiClient;
 use Doctrine\Persistence\ManagerRegistry;
 use Payum\Core\Action\ActionInterface;

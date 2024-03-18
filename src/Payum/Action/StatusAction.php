@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\SyliusExamplePlugin\Payum\Action;
+namespace ShareLeadz\SyliusCmiPlugin\Payum\Action;
 
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
@@ -25,17 +25,12 @@ final class StatusAction implements ActionInterface
 
         /** @var SyliusPaymentInterface $payment */
         $payment = $request->getFirstModel();
-//        dump($request);
-//        dump($payment);
-//        die;
-
         $details = $payment->getDetails();
 
 
-        if ($payment instanceof SyliusPaymentInterface) {
+        if ($payment instanceof SyliusPaymentInterface && isset($details['status'])) {
             if (200 === $details['status']) {
                 $request->markCaptured();
-//                dump('captured');
 
                 return;
             }

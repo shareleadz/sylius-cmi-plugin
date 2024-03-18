@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\SyliusExamplePlugin\DependencyInjection;
+namespace ShareLeadz\SyliusCmiPlugin\DependencyInjection;
 
 use Sylius\Bundle\CoreBundle\DependencyInjection\PrependDoctrineMigrationsTrait;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class AcmeSyliusExampleExtension extends AbstractResourceExtension implements PrependExtensionInterface
+final class ShareLeadzSyliusCmiExtension extends AbstractResourceExtension implements PrependExtensionInterface
 {
     use PrependDoctrineMigrationsTrait;
 
@@ -35,7 +35,7 @@ final class AcmeSyliusExampleExtension extends AbstractResourceExtension impleme
 
     protected function getMigrationsDirectory(): string
     {
-        return '@AcmeSyliusExamplePlugin/migrations';
+        return '@ShareLeadzSyliusCmiPlugin/migrations';
     }
 
     protected function getNamespacesOfMigrationsExecutedBefore(): array

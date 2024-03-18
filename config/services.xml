@@ -2,17 +2,16 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="Acme\SyliusExamplePlugin\Controller\GreetingController" autowire="true" autoconfigure="true" public="true" />
         <!-- Put your services here -->
         <service id="app.cmi_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
-            <argument>Acme\SyliusExamplePlugin\Payum\SyliusPaymentGatewayFactory</argument>
+            <argument>ShareLeadz\SyliusCmiPlugin\Payum\SyliusPaymentGatewayFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="sylius_payment" />
         </service>
-        <service id="Acme\SyliusExamplePlugin\Form\Type\SyliusGatewayConfigurationType">
+        <service id="ShareLeadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType">
             <tag name="sylius.gateway_configuration_type" type="sylius_payment" label="Sylius Payment" />
             <tag name="form.type" />
         </service>
-        <service id="Acme\SyliusExamplePlugin\Payum\Action\CaptureAction" public="true">
+        <service id="ShareLeadz\SyliusCmiPlugin\Payum\Action\CaptureAction" public="true">
             <argument type="service" id="logger" />
             <argument type="service" id="request_stack" />
             <argument type="service" id="router" />
@@ -20,7 +19,7 @@
             <argument type="service" id="sm.factory" />
             <tag name="payum.action" factory="sylius_payment" alias="payum.action.capture" />
         </service>
-        <service id="Acme\SyliusExamplePlugin\Payum\Action\StatusAction" public="true">
+        <service id="ShareLeadz\SyliusCmiPlugin\Payum\Action\StatusAction" public="true">
             <argument type="service" id="request_stack" />
         </service>
     </services>

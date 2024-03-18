@@ -1,10 +1,13 @@
 {
+    "name": "shareleadz/sylius-cmi-plugin",
     "type": "sylius-plugin",
+    "description": "Sylius plugin to integrate CMI as payment method to sylius shop.",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "cmi"
     ],
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.0",
         "mehdirochdi/cmi-payment-php": "^1.0",
@@ -60,8 +63,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "ShareLeadz\\SyliusCmiPlugin\\": "src/",
+            "Tests\\ShareLeadz\\SyliusCmiPlugin\\": "tests/"
         }
     },
     "autoload-dev": {
