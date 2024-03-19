@@ -1,6 +1,6 @@
 <?php
 
-namespace ShareLeadz\SyliusCmiPlugin\Cmi;
+namespace Leadz\SyliusCmiPlugin\Cmi;
 
 use CMI\CmiClient;
 
@@ -11,9 +11,8 @@ class CmiProdClient extends CmiClient
     public function redirect_post() {
         $url = self::DEFAULT_API_BASE.'/fim/est3Dgate';
 
-        $html = "<html'>";
+        $html = "<html lang='en'>";
         $html .= "<head>";
-        $html .= "<meta http-equiv='Content-Language' content='tr'>";
         $html .= "<meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-9'>";
         $html .= "<meta http-equiv='Pragma' content='no-cache'>";
         $html .= "<meta http-equiv='Expires' content='now'>";

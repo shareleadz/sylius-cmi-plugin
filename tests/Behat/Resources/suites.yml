@@ -4,7 +4,7 @@ default:
     suites:
         greeting_customer:
             contexts:
-                - shareleadz_sylius_cmi_plugin.context.ui.shop.welcome
+                - leadz_sylius_cmi_plugin.context.ui.shop.welcome
                 
             filters:
                 tags: "@greeting_customer"

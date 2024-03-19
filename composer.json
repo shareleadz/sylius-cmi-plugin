@@ -1,5 +1,5 @@
 {
-    "name": "shareleadz/sylius-cmi-plugin",
+    "name": "leadz/sylius-cmi-plugin",
     "type": "sylius-plugin",
     "description": "Sylius plugin to integrate CMI as payment method to sylius shop.",
     "keywords": [
@@ -63,8 +63,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ShareLeadz\\SyliusCmiPlugin\\": "src/",
-            "Tests\\ShareLeadz\\SyliusCmiPlugin\\": "tests/"
+            "Leadz\\SyliusCmiPlugin\\": "src/",
+            "Tests\\Leadz\\SyliusCmiPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

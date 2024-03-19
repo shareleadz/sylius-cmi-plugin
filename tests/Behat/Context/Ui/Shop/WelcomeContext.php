@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\ShareLeadz\SyliusCmiPlugin\Behat\Context\Ui\Shop;
+namespace Tests\Leadz\SyliusCmiPlugin\Behat\Context\Ui\Shop;
 
 use Behat\Behat\Context\Context;
-use Tests\ShareLeadz\SyliusCmiPlugin\Behat\Page\Shop\WelcomePageInterface;
+use Tests\Leadz\SyliusCmiPlugin\Behat\Page\Shop\WelcomePageInterface;
 use Webmozart\Assert\Assert;
 
 final class WelcomeContext implements Context

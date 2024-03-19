@@ -1,9 +1,9 @@
-shareleadz_sylius_cmi_plugin_shop:
-    resource: "@ShareLeadzSyliusCmiPlugin/config/shop_routing.yml"
+leadz_sylius_cmi_plugin_shop:
+    resource: "@LeadzSyliusCmiPlugin/config/shop_routing.yml"
     prefix: /{_locale}
     requirements:
         _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
 
-shareleadz_sylius_cmi_plugin_admin:
-    resource: "@ShareLeadzSyliusCmiPlugin/config/admin_routing.yml"
+leadz_sylius_cmi_plugin_admin:
+    resource: "@LeadzSyliusCmiPlugin/config/admin_routing.yml"
     prefix: /admin

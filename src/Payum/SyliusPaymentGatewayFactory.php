@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ShareLeadz\SyliusCmiPlugin\Payum;
+namespace Leadz\SyliusCmiPlugin\Payum;
 
-use ShareLeadz\SyliusCmiPlugin\Payum\Action\StatusAction;
+use Leadz\SyliusCmiPlugin\Payum\Action\StatusAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ShareLeadz\SyliusCmiPlugin\Payum;
+namespace Leadz\SyliusCmiPlugin\Payum;
 
 final class SyliusApi
 {

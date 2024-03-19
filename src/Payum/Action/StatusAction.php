@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ShareLeadz\SyliusCmiPlugin\Payum\Action;
+namespace Leadz\SyliusCmiPlugin\Payum\Action;
 
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;

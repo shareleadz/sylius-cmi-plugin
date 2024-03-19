@@ -1,4 +1,4 @@
 suites:
     main:
-        namespace: ShareLeadz\SyliusCmiPlugin
-        psr4_prefix: ShareLeadz\SyliusCmiPlugin
+        namespace: Leadz\SyliusCmiPlugin
+        psr4_prefix: Leadz\SyliusCmiPlugin

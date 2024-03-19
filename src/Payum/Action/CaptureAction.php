@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ShareLeadz\SyliusCmiPlugin\Payum\Action;
+namespace Leadz\SyliusCmiPlugin\Payum\Action;
 
-use ShareLeadz\SyliusCmiPlugin\Cmi\CmiProdClient;
-use ShareLeadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType;
-use ShareLeadz\SyliusCmiPlugin\Payum\SyliusApi;
+use Leadz\SyliusCmiPlugin\Cmi\CmiProdClient;
+use Leadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType;
+use Leadz\SyliusCmiPlugin\Payum\SyliusApi;
 use CMI\CmiClient;
 use Doctrine\Persistence\ManagerRegistry;
 use Payum\Core\Action\ActionInterface;
@@ -81,7 +81,6 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             if ($status) {
                 if ('00' == $this->requestStack->getMainRequest()->request->get('ProcReturnCode')) {
                     $payment->setDetails(array_merge($payment->getDetails(), ['status' => 200]));
-//                    $this->managerRegistry->getManager()->flush();
                     $getStatusRequest = new GetStatus($payment);
                     $statusAction = new StatusAction();
                     $statusAction->execute($getStatusRequest);
