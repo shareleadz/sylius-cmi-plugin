@@ -107,16 +107,11 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             }
             throw new HttpResponse($response);
         }
-        if ($order->getTaxIncludedTotal() > 0) {
-            $amount = (string)abs($this->syliusCurrencyConverter->convert($order->getTaxIncludedTotal(), $order->getCurrencyCode(), 'MAD') / 100);
-        } else {
-            $amount = (string)abs($this->syliusCurrencyConverter->convert($order->getTotal(), $order->getCurrencyCode(), 'MAD') / 100);
-        }
         $cmiHelper = new CmiHelper([
             'storekey' => $this->api->getCmiSecretKey(),
             'clientid' => $this->api->getCmiClientId(),
             'oid' => (string)$order->getId(),
-            'amount' => $amount,
+            'amount' => $payment->getAmount(),
             'shopurl' => $this->router->generate('sylius_shop_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'CallbackURL' => $request->getToken()->getTargetUrl(),
             'AutoRedirect' => $this->api->getCmiAutoRedirect() === SyliusGatewayConfigurationType::ENABLED ? 'true' : 'false',
