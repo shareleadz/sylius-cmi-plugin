@@ -111,7 +111,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             'storekey' => $this->api->getCmiSecretKey(),
             'clientid' => $this->api->getCmiClientId(),
             'oid' => (string)$order->getId(),
-            'amount' => $payment->getAmount(),
+            'amount' => $payment->getAmount() / 100,
             'shopurl' => $this->router->generate('sylius_shop_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'CallbackURL' => $request->getToken()->getTargetUrl(),
             'AutoRedirect' => $this->api->getCmiAutoRedirect() === SyliusGatewayConfigurationType::ENABLED ? 'true' : 'false',
