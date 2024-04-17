@@ -24,6 +24,8 @@ final class SyliusPaymentGatewayFactory extends GatewayFactory
                 $config['cmi_secret_key'],
                 $config['cmi_test_mode'],
                 $config['cmi_auto_redirect'],
+                $config['cmi_redirect_to'],
+                $config['update_state_based_on']
             );
         };
     }

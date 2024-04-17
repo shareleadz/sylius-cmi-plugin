@@ -21,7 +21,6 @@ use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Payum\Core\Request\Capture;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Currency\Converter\CurrencyConverterInterface;
 use Sylius\Component\Payment\Model\PaymentInterface as ModelPaymentInterface;
 use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,21 +34,17 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
     private Router $router;
     private ManagerRegistry $managerRegistry;
     private FactoryInterface $factory;
-    private CurrencyConverterInterface $syliusCurrencyConverter;
 
     public function __construct(
         RequestStack               $requestStack,
         Router                     $router,
         ManagerRegistry            $managerRegistry,
         FactoryInterface           $factory,
-        CurrencyConverterInterface $syliusCurrencyConverter,
-    )
-    {
+    ) {
         $this->requestStack = $requestStack;
         $this->router = $router;
         $this->managerRegistry = $managerRegistry;
         $this->factory = $factory;
-        $this->syliusCurrencyConverter = $syliusCurrencyConverter;
     }
 
     /**
@@ -76,16 +71,36 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             $status = null;
             if ($client->validateHash($postData['HASH'])) {
                 // check if payment was completed then redirect to product show page
-                if (PaymentInterface::STATE_COMPLETED === $payment->getState()) {
-                    throw new HttpRedirect(
-                        $this->router->generate(
-                            'sylius_shop_order_show',
-                            [
-                                '_locale' => $order->getLocaleCode(),
-                                'tokenValue' => $order->getTokenValue()
-                            ],
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        ));
+                if (
+                    (
+                        $this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_PAYMENT_STATE
+                        && ModelPaymentInterface::STATE_COMPLETED === $payment->getState()
+                    )
+                    || (
+                        $this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_TEMP_FILE
+                        && file_exists(sprintf('/tmp/order_%s_%s.tmp', ModelPaymentInterface::STATE_COMPLETED, $order->getId()))
+                    )
+                ) {
+                    if ($this->api->getCmiRedirectTo() === SyliusGatewayConfigurationType::ORDER_SHOW) {
+                        throw new HttpRedirect(
+                            $this->router->generate(
+                                'sylius_shop_order_show',
+                                [
+                                    '_locale' => $order->getLocaleCode(),
+                                    'tokenValue' => $order->getTokenValue()
+                                ],
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            ));
+                    } else {
+                        throw new HttpRedirect(
+                            $this->router->generate(
+                                'sylius_shop_order_thank_you',
+                                [
+                                    '_locale' => $order->getLocaleCode(),
+                                ],
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            ));
+                    }
                 }
                 if ($httpRequest->request->has('ProcReturnCode') && '00' == $httpRequest->request->get('ProcReturnCode')) {
                     $status = ModelPaymentInterface::STATE_COMPLETED;
@@ -104,6 +119,10 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
                 $statusAction->execute($getStatusRequest);
                 $this->updatePaymentState($payment, $status);
                 $this->managerRegistry->getManager()->flush();
+                if ($this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_TEMP_FILE) {
+                    // create tmp file based on payment state using touch
+                    touch(sprintf('/tmp/order_%s_%s.tmp', $status, $order->getId()));
+                }
             }
             throw new HttpResponse($response);
         }
@@ -126,7 +145,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             'BillToCountry' => '504',
             'tel' => $order->getCustomer()->getPhoneNumber(),
             'email' => $order->getCustomer()->getEmail(),
-        ]);
+        ], $this->api->getCmiTestMode() === SyliusGatewayConfigurationType::ENABLED);
 
         throw new HttpPostRedirect($cmiHelper->getGateway(), $cmiHelper->getHttpPostRequestParameters());
     }
