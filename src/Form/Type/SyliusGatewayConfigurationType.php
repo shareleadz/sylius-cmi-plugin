@@ -15,8 +15,6 @@ final class SyliusGatewayConfigurationType extends AbstractType
     public const DISABLED = 'disabled';
     public const ORDER_THANK_YOU = 'order_thank_you';
     public const ORDER_SHOW = 'order_show';
-    public const UPDATE_STATE_BASED_ON_PAYMENT_STATE = 'update_state_based_on_payment_state';
-    public const UPDATE_STATE_BASED_ON_TEMP_FILE = 'update_state_based_on_temp_file';
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -40,13 +38,6 @@ final class SyliusGatewayConfigurationType extends AbstractType
                     'Order thank you' => self::ORDER_THANK_YOU,
                     'Order show' => self::ORDER_SHOW
                 ]
-            ])
-            ->add('update_state_based_on', ChoiceType::class, [
-                'choices' => [
-                    'Payment state' => self::UPDATE_STATE_BASED_ON_PAYMENT_STATE,
-                    'Temp file' => self::UPDATE_STATE_BASED_ON_TEMP_FILE
-                ],
-                'help' => 'Choose how to update the state of the order based on the payment state. (use temp file for slow database updates)'
             ])
         ;
     }

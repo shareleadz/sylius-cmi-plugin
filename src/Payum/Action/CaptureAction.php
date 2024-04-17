@@ -71,16 +71,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             $status = null;
             if ($client->validateHash($postData['HASH'])) {
                 // check if payment was completed then redirect to product show page
-                if (
-                    (
-                        $this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_PAYMENT_STATE
-                        && ModelPaymentInterface::STATE_COMPLETED === $payment->getState()
-                    )
-                    || (
-                        $this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_TEMP_FILE
-                        && file_exists(sprintf('/tmp/order_%s_%s.tmp', ModelPaymentInterface::STATE_COMPLETED, $order->getId()))
-                    )
-                ) {
+                if ($httpRequest->query->has('cmi_step') && $httpRequest->query->get('cmi_step') === 'ok') {
                     if ($this->api->getCmiRedirectTo() === SyliusGatewayConfigurationType::ORDER_SHOW) {
                         throw new HttpRedirect(
                             $this->router->generate(
@@ -119,10 +110,6 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
                 $statusAction->execute($getStatusRequest);
                 $this->updatePaymentState($payment, $status);
                 $this->managerRegistry->getManager()->flush();
-                if ($this->api->getUpdateStateBasedOn() === SyliusGatewayConfigurationType::UPDATE_STATE_BASED_ON_TEMP_FILE) {
-                    // create tmp file based on payment state using touch
-                    touch(sprintf('/tmp/order_%s_%s.tmp', $status, $order->getId()));
-                }
             }
             throw new HttpResponse($response);
         }
@@ -132,10 +119,10 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             'oid' => (string)$order->getId(),
             'amount' => $payment->getAmount() / 100,
             'shopurl' => $this->router->generate('sylius_shop_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'CallbackURL' => $request->getToken()->getTargetUrl(),
+            'CallbackURL' => $request->getToken()->getTargetUrl().'?cmi_step=callback',
             'AutoRedirect' => $this->api->getCmiAutoRedirect() === SyliusGatewayConfigurationType::ENABLED ? 'true' : 'false',
-            'okUrl' => $request->getToken()->getTargetUrl(),
-            'failUrl' => $request->getToken()->getTargetUrl(),
+            'okUrl' => $request->getToken()->getTargetUrl().'?cmi_step=ok',
+            'failUrl' => $request->getToken()->getTargetUrl().'?cmi_step=fail',
             'BillToName' => (string)($order->getCustomer()->getFirstName() ?? $order->getCustomer()->getEmail()),
             //'BillToCompany' => $order->getCustomer()->getEmail(),
             'BillToStreet12' => $order->getBillingAddress()->getStreet(),

@@ -16,7 +16,6 @@
             <argument type="service" id="router" />
             <argument type="service" id="doctrine" />
             <argument type="service" id="sm.factory" />
-            <argument type="service" id="sylius.currency_converter" />
             <tag name="payum.action" factory="sylius_payment" alias="payum.action.capture" />
         </service>
         <service id="Leadz\SyliusCmiPlugin\Payum\Action\StatusAction" public="true">

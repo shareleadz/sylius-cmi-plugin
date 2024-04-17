@@ -28,7 +28,6 @@ final class StatusAction implements ActionInterface
         $payment = $request->getFirstModel();
         $details = $payment->getDetails();
 
-
         if ($payment instanceof SyliusPaymentInterface && isset($details['status'])) {
             if (PaymentInterface::STATE_COMPLETED === $details['status']) {
                 $request->markCaptured();
