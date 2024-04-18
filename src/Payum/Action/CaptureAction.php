@@ -71,7 +71,10 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             $status = null;
             if ($client->validateHash($postData['HASH'])) {
                 // check if payment was completed then redirect to product show page
-                if ($httpRequest->query->has('cmi_step') && $httpRequest->query->get('cmi_step') === 'ok') {
+                if (
+                    $httpRequest->query->has('cmi_step') && $httpRequest->query->get('cmi_step') === 'ok'
+                    && ModelPaymentInterface::STATE_COMPLETED === $payment->getState()
+                ) {
                     if ($this->api->getCmiRedirectTo() === SyliusGatewayConfigurationType::ORDER_SHOW) {
                         throw new HttpRedirect(
                             $this->router->generate(
