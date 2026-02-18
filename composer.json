@@ -3,6 +3,17 @@
     "description": "CMI payment integration for Sylius 2.0",
     "type": "sylius-plugin",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Paweł Jędrzejewski"
+        },
+        {
+            "name": "Sylius project"
+        },
+        {
+            "name": "Community contributions"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "sylius/sylius": "^2.0"
