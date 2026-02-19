@@ -5,18 +5,19 @@
         <!-- Put your services here -->
         <service id="app.cmi_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Leadz\SyliusCmiPlugin\Payum\SyliusPaymentGatewayFactory</argument>
-            <tag name="payum.gateway_factory_builder" factory="sylius_payment" />
+            <tag name="payum.gateway_factory_builder" factory="cmi_payment" />
         </service>
         <service id="Leadz\SyliusCmiPlugin\Form\Type\SyliusGatewayConfigurationType">
-            <tag name="sylius.gateway_configuration_type" type="sylius_payment" label="Cmi Payment" />
+            <tag name="sylius.gateway_configuration_type" type="cmi_payment" label="Cmi Payment" />
             <tag name="form.type" />
         </service>
         <service id="Leadz\SyliusCmiPlugin\Payum\Action\CaptureAction" public="true">
             <argument type="service" id="request_stack" />
             <argument type="service" id="router" />
             <argument type="service" id="doctrine" />
-            <argument type="service" id="sm.factory" />
-            <tag name="payum.action" factory="sylius_payment" alias="payum.action.capture" />
+            <argument type="service" id="sylius_abstraction.state_machine" />
+            <argument type="service" id="logger" />
+            <tag name="payum.action" factory="cmi_payment" alias="payum.action.capture" />
         </service>
         <service id="Leadz\SyliusCmiPlugin\Payum\Action\StatusAction" public="true">
             <argument type="service" id="request_stack" />

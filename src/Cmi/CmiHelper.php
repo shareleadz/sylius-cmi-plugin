@@ -30,11 +30,15 @@ class CmiHelper
     {
         // amount|BillToCompany|BillToName|callbackUrl|clientid|currency|email|failUrl|hashAlgorithm|lang|okurl|rnd|storetype|TranType|storeKey
         $cmiParameters = $this->parameters;
+        // var_dump($cmiParameters);
         $postParameters = array_keys($cmiParameters);
         natcasesort($postParameters);
         $hashValue = '';
+        // var_dump($postParameters);
         foreach ($postParameters as $param) {
-            $paramValue = trim($cmiParameters[$param]);
+            // var_dump($param);
+
+            $paramValue = $cmiParameters[$param] !== null ? trim($cmiParameters[$param]) : '';
             $escapedParamValue = str_replace("|", "\\|", str_replace("\\", "\\\\", $paramValue));
 
             $lowerParam = strtolower($param);

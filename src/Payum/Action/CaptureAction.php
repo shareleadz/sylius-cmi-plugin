@@ -15,8 +15,7 @@ use Payum\Core\Exception\UnsupportedApiException;
 use Payum\Core\Reply\HttpPostRedirect;
 use Payum\Core\Reply\HttpRedirect;
 use Payum\Core\Reply\HttpResponse;
-use SM\Factory\FactoryInterface;
-use SM\StateMachine\StateMachine;
+use Sylius\Abstraction\StateMachine\StateMachineInterface;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Payum\Core\Request\Capture;
 use Sylius\Component\Core\Model\Order;
@@ -26,6 +25,7 @@ use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use Psr\Log\LoggerInterface;
 
 final class CaptureAction implements ActionInterface, ApiAwareInterface
 {
@@ -33,18 +33,21 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
     private RequestStack $requestStack;
     private Router $router;
     private ManagerRegistry $managerRegistry;
-    private FactoryInterface $factory;
+    private StateMachineInterface $stateMachine;
+    private LoggerInterface $logger;
 
     public function __construct(
         RequestStack               $requestStack,
         Router                     $router,
         ManagerRegistry            $managerRegistry,
-        FactoryInterface           $factory,
+        StateMachineInterface $stateMachine,
+        LoggerInterface              $logger
     ) {
         $this->requestStack = $requestStack;
         $this->router = $router;
         $this->managerRegistry = $managerRegistry;
-        $this->factory = $factory;
+        $this->stateMachine = $stateMachine;
+        $this->logger = $logger;
     }
 
     /**
@@ -62,6 +65,16 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
         $httpRequest = $this->requestStack->getMainRequest();
         $postData = $httpRequest->request->all();
         if (count($postData) > 0) {
+            // add referer to log context to be able to distinguish between different callbacks (ok, fail, callback)
+            $this->logger->info('http method', ['method' => $httpRequest->getMethod()]);
+            $this->logger->info('cmi_step', ['cmi_step' => $httpRequest->query->get('cmi_step')]);
+            $this->logger->info('referer', ['referer' => $_SERVER['HTTP_REFERER'] ?? null]);
+
+            
+
+            $this->logger->info('Received CMI callback with post data', ['postData' => $postData, 'referer' => $httpRequest->headers->get('Referer'), 'query' => $httpRequest->query->all(), 'step' => $httpRequest->query->get('cmi_step')]);
+            $step = (string) $httpRequest->query->get('cmi_step');
+            $isCallback = $step === 'callback';
             $postData['storekey'] = $this->api->getCmiSecretKey();
             // sometimes at least on test gateway hashAlgorithm field contains empty space
             if (isset($postData['hashAlgorithm']) && $postData['hashAlgorithm'] !== null && (\preg_match('/\s/', $postData['hashAlgorithm']))) {
@@ -72,7 +85,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
             if ($client->validateHash($postData['HASH'])) {
                 // check if payment was completed then redirect to product show page
                 if (
-                    $httpRequest->query->has('cmi_step') && $httpRequest->query->get('cmi_step') === 'ok'
+                    $step === 'ok'
                     && ModelPaymentInterface::STATE_COMPLETED === $payment->getState()
                 ) {
                     if ($this->api->getCmiRedirectTo() === SyliusGatewayConfigurationType::ORDER_SHOW) {
@@ -96,14 +109,18 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
                             ));
                     }
                 }
-                if ($httpRequest->request->has('ProcReturnCode') && '00' == $httpRequest->request->get('ProcReturnCode')) {
+                if ($isCallback && $httpRequest->request->has('ProcReturnCode') && '00' == $httpRequest->request->get('ProcReturnCode')) {
                     $status = ModelPaymentInterface::STATE_COMPLETED;
                     $response = 'ACTION=POSTAUTH';
-                } else {
+                } elseif ($isCallback) {
                     $response = 'APPROVED';
+                } else {
+                    $response = 'OK';
                 }
             } else {
-                $status = ModelPaymentInterface::STATE_FAILED;
+                if ($isCallback) {
+                    $status = ModelPaymentInterface::STATE_FAILED;
+                }
                 $response = 'FAILURE';
             }
             if (null !== $status) {
@@ -140,15 +157,15 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface
         throw new HttpPostRedirect($cmiHelper->getGateway(), $cmiHelper->getHttpPostRequestParameters());
     }
 
+
+
     private function updatePaymentState(PaymentInterface $payment, string $nextState): void
     {
-        /** @var StateMachine $stateMachine */
-        $stateMachine = $this->factory->get($payment, PaymentTransitions::GRAPH);
-
-        if (null !== $transition = $stateMachine->getTransitionToState($nextState)) {
-            $stateMachine->apply($transition);
+        if (null !== $transition = $this->stateMachine->getTransitionToState($payment, PaymentTransitions::GRAPH, $nextState)) {
+            $this->stateMachine->apply($payment, PaymentTransitions::GRAPH, $transition);
         }
     }
+
 
     public function supports($request): bool
     {

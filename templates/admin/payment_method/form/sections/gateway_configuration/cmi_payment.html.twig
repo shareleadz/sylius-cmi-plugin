@@ -1,0 +1,19 @@
+{% set form = hookable_metadata.context.form %}
+
+{% if form.gatewayConfig.config is defined %}
+    <div class="col-12 col-md-6">
+        {{ form_row(form.gatewayConfig.config.cmi_client_id) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.gatewayConfig.config.cmi_secret_key) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.gatewayConfig.config.cmi_test_mode) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.gatewayConfig.config.cmi_auto_redirect) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.gatewayConfig.config.cmi_redirect_to) }}
+    </div>
+{% endif %}

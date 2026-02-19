@@ -19,34 +19,26 @@ final class SyliusGatewayConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('cmi_client_id', TextType::class, ['label' => 'CMI Client ID'])
-            ->add('cmi_secret_key', TextType::class, ['label' => 'CMI Secret Key'])
+            ->add('cmi_client_id', TextType::class)
+            ->add('cmi_secret_key', TextType::class)
             ->add('cmi_test_mode', ChoiceType::class, [
-                'label' => 'Test Mode',
                 'choices' => [
                     'Enabled' => self::ENABLED,
                     'Disabled' => self::DISABLED
                 ]
             ])
             ->add('cmi_auto_redirect', ChoiceType::class, [
-                'label' => 'Auto Redirect',
                 'choices' => [
                     'Enabled' => self::ENABLED,
                     'Disabled' => self::DISABLED
                 ]
             ])
             ->add('cmi_redirect_to', ChoiceType::class, [
-                'label' => 'Redirect To',
                 'choices' => [
                     'Order thank you' => self::ORDER_THANK_YOU,
                     'Order show' => self::ORDER_SHOW
                 ]
             ])
         ;
-    }
-
-    public function getBlockPrefix(): string
-    {
-        return 'sylius_payment_gateway_configuration_cmi_payment';
     }
 }

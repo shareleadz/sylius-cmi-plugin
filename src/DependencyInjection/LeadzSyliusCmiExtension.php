@@ -25,6 +25,23 @@ final class LeadzSyliusCmiExtension extends AbstractResourceExtension implements
 
     public function prepend(ContainerBuilder $container): void
     {
+        $container->prependExtensionConfig('sylius_twig_hooks', [
+            'hooks' => [
+                'sylius_admin.payment_method.create.content.form.sections.gateway_configuration.cmi_payment' => [
+                    'fields' => [
+                        'template' => '@LeadzSyliusCmiPlugin/admin/payment_method/form/sections/gateway_configuration/cmi_payment.html.twig',
+                        'priority' => 0,
+                    ],
+                ],
+                'sylius_admin.payment_method.update.content.form.sections.gateway_configuration.cmi_payment' => [
+                    'fields' => [
+                        'template' => '@LeadzSyliusCmiPlugin/admin/payment_method/form/sections/gateway_configuration/cmi_payment.html.twig',
+                        'priority' => 0,
+                    ],
+                ],
+            ],
+        ]);
+
         $this->prependDoctrineMigrations($container);
     }
 
